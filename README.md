@@ -1,9 +1,7 @@
 # wifi
 
 > A Mpvue project
-
 ## Build Setup
-
 ``` bash
 # 初始化项目
 vue init mpvue/mpvue-quickstart myproject
