@@ -9,7 +9,7 @@
     },
     "miniprogramRoot": "dist/wx/",
     "compileType": "miniprogram",
-    "appid": "touristappid",
+    "appid": "wx73a35eed72e5df50",
     "projectname": "wifi",
     "condition": {
         "search": {
