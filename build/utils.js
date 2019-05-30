@@ -34,7 +34,7 @@ exports.cssLoaders = function (options) {
   var px2rpxLoader = {
     loader: 'px2rpx-loader',
     options: {
-      baseDpr: 0.5,
+      baseDpr: 1,
       rpxUnit: 0.5
     }
   }
@@ -70,12 +70,7 @@ exports.cssLoaders = function (options) {
     postcss: generateLoaders(),
     less: generateLoaders('less'),
     sass: generateLoaders('sass', { indentedSyntax: true }),
-    scss: generateLoaders('sass').concat({
-      loader: 'sass-resources-loader',
-      options: {
-        resources: path.resolve(__dirname, '../src/assets/styles/global.scss')
-      }
-    }),
+    scss: generateLoaders('sass'),
     stylus: generateLoaders('stylus'),
     styl: generateLoaders('stylus')
   }

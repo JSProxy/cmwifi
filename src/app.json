@@ -1,30 +1,9 @@
 {
   "pages": [
-    "pages/auth/main",
     "pages/index/main",
     "pages/logs/main",
     "pages/counter/main"
   ],
-  "permission": {
-    "scope.userLocation": {
-      "desc": "小程序需要获取您的位置信息以便搜索附近WiFi"
-    }
-  },
-  "usingComponents": {
-    "van-row": "path/to/vant-weapp/lib/row/index",
-    "van-col": "path/to/vant-weapp/lib/col/index",
-    "van-cell": "static/vant-weapp/vant/cell/index",
-    "van-cell-group": "static/vant-weapp/vant/cell-group/index",
-    "van-icon": "static/vant-weapp/vant/icon/index",
-    "van-goods-action": "static/vant-weapp/vant/goods-action/index",
-    "van-goods-action-icon": "static/vant-weapp/vant/goods-action-icon/index",
-    "van-goods-action-button": "static/vant-weapp/vant/goods-action-button/index",
-    "van-loading": "static/vant-weapp/vant/loading/index",
-    "van-popup": "static/vant-weapp/vant/popup/index",
-    "van-field": "static/vant-weapp/vant/field/index",
-    "van-toast": "static/vant-weapp/vant/toast/index",
-    "van-dialog": "static/vant-weapp/vant/dialog/index"
-  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
