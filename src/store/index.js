@@ -24,7 +24,7 @@ const mutations = {
   }
 }
 const actions = {
-
+  
   setInfoAsync({commit},value){
     commit('setInfo',value)
   }

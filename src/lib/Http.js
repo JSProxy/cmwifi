@@ -6,14 +6,10 @@
 let Fly = require("flyio/dist/npm/wx");
 let flyio = new Fly;
 //使用表单的时候用qs转化
-let qs = require("qs");
-
-// import method from "../utils/method"
+// let qs = require("qs");
 import { catchInfo, warnInfo } from "../utils/infoCatch.js"; //报错日志
-
 // flyio.config.timeout = 5000;
 // flyio.config.parseJson = false;
-
 flyio.interceptors.request.use(
   request => {
     request.headers = {

@@ -1,54 +1,63 @@
 /**
- *
- * @param {Object} data 需要转换的参数
- * @returns {String} 返回的值 如 a=1&b=2
+ * 转换地址栏参数
+ * @param {Object} data 需转换的参数
+ * @returns {String} 返回的值 如A=a&B=b
  */
-function encoderPath(data) {
-  if (typeof (data) != 'Object') {
-    throw new Error('请传入一个对象')
-  }
-  let arr = []
+function encoderPath (data) {
+  const tempArr = []
   for (let key in data) {
-    arr.push(`${key}=${data[key]}`)
+    tempArr.push(`${key}=${data[key]}`)
   }
-  return arr.join('&')
+  return tempArr.join('&')
 }
-
+/**
+ * @param { Object } op
+ * @param { Number } op.pageLimit 跳转深度
+ */
 export default class Router {
-  constructor({
-    limitPage
-  }) {
-    this.limitPage = limitPage || 10
+  constructor ({ pageLimit }) {
+    this.pageLimit = pageLimit || 10
   }
+  /**
+   * 跳转
+   * @param { String } url 跳转地址
+   * @param { Object } data 跳转参数
+   * @returns {Promise}
+   */
+  push (url, data) {
+    if (!url || typeof url !== 'string') {
+      throw new Error(`[Router.push] url 不能为空且必须是字符`)
+    }
+    if (!!data && typeof data === 'string') {
+      throw new Error(`[Router.push] data 必须是一个对象`)
+    }
 
-  push(url, data) {
-    if (!url || typeof url !== 'string') throw new Error('[Router.push]请传入String类型url')
-    if (!!data && typeof data != 'Object') throw new Error('[Router.push]请传入Object类型data')
-    let currentPages = getCurrentPages()
-
-    let tempUrl = url;
+    // 保持原有的地址, 用于重定向是使用
+    let tempUrl = url
 
     if (data) {
       url += `?${encoderPath(data)}`
     }
 
     return new Promise((resolve, reject) => {
+      const pageArr = getCurrentPages()
 
-      if (currentPages.length >= this.limitPage)
-      {
-
+      // 如果大于设置的页面临界值, 则用重定向, 否则正常跳转
+      if (pageArr.length >= this.pageLimit) {
+        this.redirect(tempUrl, data)
+          .then(resolve)
+          .catch(reject)
       } else {
         mpvue.navigateTo({
           url,
-          success(res) {
+          success (res) {
             resolve(res)
           },
-          fail(err) {
+          fail (err) {
             reject(err)
           }
         })
       }
-
     })
   }
   /**
@@ -57,9 +66,13 @@ export default class Router {
    * @param { Object } data 跳转参数
    * @returns {Promise}
    */
-  redirect(url, data) {
-    if (!url || typeof url !== 'string') throw new Error('[Router.push]请传入String类型url');
-    if (!!data && typeof data != 'Object') throw new Error('[Router.push]请传入Object类型data');
+  redirect (url, data) {
+    if (!url || typeof url !== 'string') {
+      throw new Error(`[Router.redirect] url 不能为空且必须是字符`)
+    }
+    if (!!data && typeof data === 'string') {
+      throw new Error(`[Router.redirect] data 必须是一个对象`)
+    }
 
     if (data) {
       url += encoderPath(data)
@@ -68,10 +81,10 @@ export default class Router {
     return new Promise((resolve, reject) => {
       mpvue.redirectTo({
         url,
-        success(res) {
+        success (res) {
           resolve(res)
         },
-        fail(err) {
+        fail (err) {
           reject(err)
         }
       })
@@ -82,14 +95,14 @@ export default class Router {
    * @param {Number} delta 返回页数
    * @returns {Promise}
    */
-  back(delta) {
+  back (delta) {
     return new Promise((resolve, reject) => {
       mpvue.navigateBack({
         delta,
-        success(res) {
+        success (res) {
           resolve(res)
         },
-        fail(err) {
+        fail (err) {
           reject(err)
         }
       })
@@ -101,7 +114,7 @@ export default class Router {
    * @param { Object } data 跳转参数
    * @returns {Promise}
    */
-  reLaunch(url, data) {
+  reLaunch (url, data) {
     if (!url || typeof url !== 'string') {
       throw new Error(`[Router.reLaunch] url 不能为空且必须是字符`)
     }
@@ -116,10 +129,10 @@ export default class Router {
     return new Promise((resolve, reject) => {
       mpvue.reLaunch({
         url,
-        success(res) {
+        success (res) {
           resolve(res)
         },
-        fail(err) {
+        fail (err) {
           reject(err)
         }
       })
@@ -130,14 +143,14 @@ export default class Router {
    * @param { String } url 跳转地址
    * @returns {Promise}
    */
-  switchTab(url) {
+  switchTab (url) {
     return new Promise((resolve, reject) => {
       mpvue.switchTab({
         url,
-        success(res) {
+        success (res) {
           resolve(res)
         },
-        fail(err) {
+        fail (err) {
           reject(err)
         }
       })
