@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "深圳市超盟金服技术...",
+  "usingComponents": {
+    "i-modal": "../../../static/iview/modal/index",
+    "i-button": "../../../static/iview/button/index"
+}
+}

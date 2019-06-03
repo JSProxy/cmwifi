@@ -1,6 +1,6 @@
 const host = {
   dev: {
-    API_URL:'https://wx.test.com',
+    API_URL:'https://10.11.1.50:2002/',
     appID:'wx73a35eed72e5df50',
     appSecret:'18e728e27a144b82dc6d1e2ad3fcb89c'
   },

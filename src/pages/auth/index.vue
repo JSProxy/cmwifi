@@ -1,41 +1,47 @@
 <template>
   <div class="wrapper">
-     <i-modal title="微信授权获信息" :visible="wxAuth" :show-ok="showButton" :show-cancel="false">
+
+    <div class="header-box">
+      <image class="cmlogo" mode="aspectFill" src="/static/images/cmlogo@2x.png"></image>
+      <div class="space-h-20"></div>
+      <div class="space-h-10"></div>
+      <div>深圳市超盟金服技术信息服务有限公司</div>
+    </div>
+     <i-modal  :visible="wxAuth" :show-ok="showButton" :show-cancel="false">
         <div class="auth_box">
-          <button open-type="getUserInfo" class="dingdang-btn"  @getuserinfo="bindGetUserInfo" @click="handleOk">确定</button>
+          <div>小程序需要登入才能进行提供更多服务,是否授权登陆？</div>
+           <div class="space-h-20"></div>
+            <div class="space-h-20"></div>
+          <div class="btn-box">
+             <button open-type="getUserInfo" plain='true' size="mini" class="dingdang-btn"  @getuserinfo="bindGetUserInfo" @click="handleOk">授权登陆</button>
+          </div>
         </div>
     </i-modal>
   </div>
 </template>
 
 <script>
-// import { removeCookie } from '@/router/cookie'
 export default {
   name:'auth',
   data () {
     return {
-      userAuth:'cmperson', //用户类型权限
-      showButton: true, //不显示组件按钮
-      wxAuth: true      //微信授权按钮
+      showButton: false, //不显示组件按钮
+      wxAuth: false      //微信授权按钮
     }
   },
   computed: {
     WXAUTH(){
-      // wx.hideLoading();
-      // this.wxAuth = this.$store.state.wxAuthShow;
+      wx.hideLoading();
+      this.wxAuth = this.$store.state.wxAuthShow;
       return this.wxAuth;
     }
   },
   methods: {
     bindGetUserInfo (e) {
-      if (e.mp.detail.rawData){
-
-        // this.$auth.saveUserInfo(e.mp.detail);
+      if (e.mp.detail.rawData)
+      {
+        this.$auth.saveUserInfo(e.mp.detail);
         this.wxAuth = false;
-        console.log('用户按了允许授权按钮')
-        console.log(e)
-      const url = '/pages/index/main';
-      wx.redirectTo({ url })
       } else {
         wx.navigateBack({
           delta: -1
@@ -43,40 +49,34 @@ export default {
         console.log('用户按了拒绝按钮')
       }
     },
-    handleOk(){
-       const url = '/pages/index/main';
-      wx.redirectTo({ url })
-      // this.$store.state.wxAuthShow = false;
+    handleOk()
+    {
+      this.$store.state.wxAuthShow = false;
+
     }
   },
   mounted(){
-    // removeCookie("accessToken")
-    // wx.showLoading({
-    //   title: '加载中'
-    // })
-    // this.$auth.verify(()=>{
-    //   if(this.$route.query.page){
-    //     wx.navigateBack({
-    //       delta: -1
-    //     })
-    //   }else{
-    //     const url = '/pages/index/main'
-    //     wx.redirectTo({ url })
-    //   }
-    // });
+    // this.$auth.login();
+    wx.redirectTo({ url: '/pages/index/main' });
   }
 }
 </script>
 
 <style lang='scss' scoped>
   .auth_box{
-    padding:10px 20px;
-    background-color: pink;
+    padding:20rpx 20rpx;
+    text-align: left;
   }
-  .dingdang-btn{
-    background:#f99000;
-    color:#fff;
-    font-size:16px;
+  .btn-box{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: row;
+    .dingdang-btn{
+      margin-right: 0px;
+      color:#2095F4;
+      border: 0px solid transparent;
+    }
   }
   .wrapper{
     position: absolute;
@@ -84,6 +84,19 @@ export default {
     bottom: 0rpx;
     left: 0rpx;
     right: 0rpx;
-    background-color: red;
+    background-color: white;
+  }
+  .cmlogo{
+    width: 247rpx;
+    height: 80rpx;
+    background-color: white;;
+  }
+  .header-box{
+    display: flex;
+    margin-top: 100rpx;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 28rpx;
   }
 </style>
