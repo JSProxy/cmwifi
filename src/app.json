@@ -4,7 +4,8 @@
     "pages/index/main",
     "pages/wifi/main",
     "pages/shilian/main",
-    "pages/ao/main"
+    "pages/ao/main",
+    "pages/cmlogin/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

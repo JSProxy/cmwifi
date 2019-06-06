@@ -7,7 +7,7 @@ let Fly = require("flyio/dist/npm/wx");
 let flyio = new Fly;
 //使用表单的时候用qs转化
 // let qs = require("qs");
-import { catchInfo, warnInfo } from "../utils/infoCatch.js"; //报错日志
+import { catchInfo, warnInfo } from "./infoCatch.js"; //报错日志
 // flyio.config.timeout = 5000;
 // flyio.config.parseJson = false;
 flyio.interceptors.request.use(
@@ -28,9 +28,9 @@ flyio.interceptors.request.use(
 
 flyio.interceptors.response.use(
   response => {
-    if (response.data.code === 0) { //数据正确返回
+    if (response.data.status === 200) { //数据正确返回
       console.log("responseSuccess:",response.data)
-      return Promise.resolve(response.data);
+      return Promise.resolve(response.data.result);
     } else { //数据有误
       wx.showToast({
         title: response.data.msg,

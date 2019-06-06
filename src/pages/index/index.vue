@@ -5,11 +5,37 @@
     </div>
     <div class="space-h-20"></div>
     <div class="content-box">
-      <div class="content-row">
-        <div @click="wifiClick">wifi</div>
-        <div @click="shilianClick">食链</div>
-        <div v-if="userAuth == 'cmPerson'" @click="aoClick">AO</div>
+      <div @click="wifiClick">
+        <image
+          src="/static/images/wifi@2x.png"
+          mode="aspectFill"
+          lazy-load="false">
+        </image>
+        </div>
+      <div @click="shilianClick">
+        <image
+          src="/static/images/shilian@2x.png"
+          mode="aspectFill"
+          lazy-load="false">
+        </image>
       </div>
+      <div v-if="userAuth == 'cmPerson'" @click="aoClick">
+        <image
+          src="/static/images/cmoa@2x.png"
+          mode="aspectFill"
+          lazy-load="false">
+        </image>
+      </div>
+    </div>
+    <div v-if="userAuth == 'cmPerson'" class="cm-enter-box" @click="cmlogin">
+        <div>
+          员工入口
+        </div>
+         <image
+          src="/static/images/right-arrow@2x.png"
+          mode="aspectFill"
+          lazy-load="false">
+        </image>
     </div>
   </div>
 </template>
@@ -56,48 +82,10 @@ export default {
     Swiper
   },
   methods: {
-    bindGetUserInfo(e) {
-      if (e.mp.detail.rawData) {
-        // this.$auth.saveUserInfo(e.mp.detail);
-        this.wxAuth = false;
-        console.log("用户按了允许授权按钮");
-        console.log(e);
-        // const url = '/pages/index/main';
-        // wx.redirectTo({ url })
-      } else {
-        wx.navigateBack({
-          delta: -1
-        });
-        console.log("用户按了拒绝按钮");
-      }
-    },
-    handleOk() {
-      const url = "/pages/index/main";
-      wx.redirectTo({ url });
-      // this.$store.state.wxAuthShow = false;
-    },
+   cmlogin(){
+      wx.navigateTo({ url: "/pages/cmlogin/main" });
+   },
     wifiClick() {
-    //    wx.startWifi({ success: res => {
-    //     console.log('wifi is ok')
-    //     wx.connectWifi({
-    //     SSID: "cctv", //Wi-Fi 设备ssid,
-    //     BSSID: "DC:A9:04:97:72:C5", //Wi-Fi 设备BSSID,
-    //     password: "cctv123456", //Wi-Fi 设备password,
-    //     success: res => {
-    //     }
-    //   });
-    // } });
-
-    //    //仅 Android 与 iOS 11 以上版本支持。
-    //   wx.onWifiConnected(res => {
-    //      wx.showToast({
-    //         title: '连接成功', //提示的内容,
-    //         icon: 'success', //图标,
-    //         duration: 2000, //延迟时间,
-    //         mask: true, //显示透明蒙层，防止触摸穿透,
-    //         success: res => {}
-    //       });
-    //   });
       wx.navigateTo({ url: "/pages/wifi/main" });
     },
     shilianClick() {
@@ -111,8 +99,7 @@ export default {
   created() {
     // let app = getApp()
   },
-  mounted() {
-  },
+  mounted() {}
 };
 </script>
 
@@ -127,23 +114,26 @@ export default {
 .content-box {
   display: flex;
   flex: 1;
-  background-color: pink;
-  .content-row {
-    height: 100rpx;
-    display: flex;
-    flex: 1;
-    flex-direction: row;
-    background-color: orange;
-    justify-content: space-around;
-    align-items: center;
-    div {
-      border-radius: 50%;
-      height: 100rpx;
-      line-height: 100rpx;
-      text-align: center;
-      width: 100rpx;
-      background-color: pink;
-    }
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  image {
+    margin-top: 20rpx;
+    width: 690rpx;
+    height: 210rpx;
+  }
+}
+.cm-enter-box{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  div{
+    font-size: 28rpx;
+    color: #2095F4;
+  }
+  image{
+    width: 24rpx;
+    height: 24rpx;
   }
 }
 </style>

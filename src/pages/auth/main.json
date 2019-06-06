@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "授权界面",
+  "navigationBarTitleText": "超盟金服欢迎您",
   "usingComponents": {
     "i-modal": "../../../static/iview/modal/index",
     "i-button": "../../../static/iview/button/index"

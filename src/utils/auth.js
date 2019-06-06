@@ -1,8 +1,7 @@
 import store from '@/store/index'
-// import md5 from 'js-md5'
+import { API_URL,appId,appSecret }from '../config/hostConfig'
+import { api_codeLogin } from'../api/index'
 // import Qc from 'qs'
-
-const API_URL = 'http://10.11.1.50:2002/';
 class auth {
   setting = {
     timestamp: null, //当前时间戳
@@ -11,46 +10,52 @@ class auth {
   }
 
   //请求获取TOKEN
-  getToken(callback) {
+  async getToken(callback) {
 
     wx.showLoading({
       title: '登入中'
     })
     let code = this.setting.wxCode;
-    wx.request({
-      url: API_URL + "/oaMini/loginByCode",
-      method: 'post',
-      // header: {
-      //   'version': store.state.version,
-      //   'access-token': json.data.access_token
-      // },
-      data: {
-        code: code,
-      },
-      success: res => {
-        if (res.data.code == 1) {
-          console.log(res);
-          // store.state.openId = res.data.data.openid;
-          // store.state.userToken = res.data.data.user_token;
-          // store.state.userAuth = res.data.data.user_type || 'guest';
-          // if (store.state.userAuth != 'guest') {}
-          callback && callback();
-        }
-      },
-      complete: res => {
-        wx.hideLoading();
-        if (res.data.code != 1) {
-          setTimeout(() => {
-            wx.showToast({
-              title: res.data.msg,
-              icon: "none",
-              duration: 3000,
-              mask: false
-            })
-          }, 30)
-        }
-      }
-    });
+    let data = await api_codeLogin({code});
+    console.log(data);
+    wx.hideLoading();
+    callback && callback();
+    // wx.request({
+    //   url: API_URL + "oaMini/loginByCode",
+    //   method: 'post',
+    //   // header: {
+    //   //   'version': store.state.version,
+    //   //   'access-token': json.data.access_token
+    //   // },
+    //   data: {
+    //     code,
+    //   },
+    //   success: res => {
+    //     console.log(res);
+    //     if (res.data.code == 1)
+    //      {
+    //       console.log(res);
+    //       // store.state.openId = res.data.data.openid;
+    //       // store.state.userToken = res.data.data.user_token;
+    //       // store.state.userAuth = res.data.data.user_type || 'guest';
+    //       // if (store.state.userAuth != 'guest') {}
+    //       callback && callback();
+    //     }
+    //   },
+    //   complete: res => {
+    //     wx.hideLoading();
+    //     // if (res.data.code != 1) {
+    //     //   setTimeout(() => {
+    //     //     wx.showToast({
+    //     //       title: res.data.msg,
+    //     //       icon: "none",
+    //     //       duration: 3000,
+    //     //       mask: false
+    //     //     })
+    //     //   }, 30)
+    //     // }
+    //   }
+    // });
 
   }
 
@@ -65,8 +70,12 @@ class auth {
         store.state.longitude = res.longitude;
       }
     })
-
+    // const url = '/pages/index/main';
+    //     wx.redirectTo({
+    //       url
+    //     })
     //这里实现登入漏极
+
     this.getToken(
       () => {
         // wx.setStorageSync('openId', store.state.openId);
@@ -91,7 +100,8 @@ class auth {
   getUserInfo() {
     wx.getSetting({
       success: (res) => {
-        if (res.authSetting['scope.userInfo']) {
+        if (res.authSetting['scope.userInfo'])
+        {
           wx.getUserInfo({
             success: (res) => {
               this.saveUserInfo(res);

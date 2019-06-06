@@ -56,8 +56,7 @@ export default {
     }
   },
   mounted(){
-    // this.$auth.login();
-    wx.redirectTo({ url: '/pages/index/main' });
+    this.$auth.login();
   }
 }
 </script>
