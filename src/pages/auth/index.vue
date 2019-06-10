@@ -52,7 +52,6 @@ export default {
     handleOk()
     {
       this.$store.state.wxAuthShow = false;
-
     }
   },
   mounted(){

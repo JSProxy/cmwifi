@@ -16,8 +16,8 @@ class auth {
       title: '登入中'
     })
     let code = this.setting.wxCode;
-    let data = await api_codeLogin({code});
-    console.log(data);
+    // let data = await api_codeLogin({code});
+    // console.log(data);
     wx.hideLoading();
     callback && callback();
     // wx.request({

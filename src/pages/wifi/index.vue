@@ -2,7 +2,7 @@
   <div class="wifi-wrapper">
     <div class="title">可用WIFI列表</div>
     <div class="content">
-      <div class="content-item" @click="connectWifi" v-for="item in wifiList" :key="item.id">
+      <div class="content-item" @click="connectWifi(item)" v-for="item in wifiList" :key="item.id">
         <div class="left-box">
           <div class="wifi-title" :class="connectName == item.name?'wifi-active':''">{{item.name}}</div>
           <div class="space-h-20"></div>
@@ -23,11 +23,13 @@
 </template>
 <script>
 import { api_wifiList } from'../../api/index'
+import wifiObj from './wifi'
 export default {
   data () {
     return {
       wifiList:[],
-      connectName:''
+      connectName:'',
+      status:0
     }
   },
   computed: {
@@ -38,42 +40,75 @@ export default {
   methods: {
     async sendHttp()
     {
-      let data = await api_wifiList({floor:11});
-      this.wifiList =data;
-      console.log(data);
+      // let data = await api_wifiList({floor:11});
+      // this.wifiList =data;
+      // console.log(data);
+      this.wifiList = [
+      {
+        name:"cctv",
+        bssid:"DC:A9:04:97:72:C5",
+        password:"cctv123456",
+      }
+      ];
     },
-    connectWifi(item){
-
-        wx.connectWifi({
-        SSID: item.name, //Wi-Fi 设备ssid,
-        BSSID: "DC:A9:04:97:72:C5", //Wi-Fi 设备BSSID,
+    connectWifi(item)
+    {
+        if(item.name == this.connectName)
+        {
+          wx.showToast({
+            title: 'wifi已经连接成功', //提示的内容,
+            icon: 'success', //图标,
+            duration: 2000, //延迟时间,
+            mask: true, //显示透明蒙层，防止触摸穿透,
+          });
+        }else{
+        wifiObj.connectWifi({
+        ssid: item.name, //Wi-Fi 设备ssid,
+        bssid: item.bssid, //Wi-Fi 设备BSSID,
         password: item.password, //Wi-Fi 设备password,
-        success: res => {
+        })
         }
-      });
 
-       //仅 Android 与 iOS 11 以上版本支持。
-      wx.onWifiConnected(res => {
-         wx.showToast({
-            title: '连接成功', //提示的内容,
+    }
+  },
+  async onLoad(){
+    Object.assign(this.$data,this.$options.data()); //清空data
+
+    this.sendHttp();
+    let data = await wifiObj.startWifi();
+    this.status = data.status;
+    if(data.status)
+    {
+      console.log('wifi初始化成功');
+    }
+    // 监听wifi连接仅 Android 与 iOS 11 以上版本支持。
+    wifiObj.onWifiConnected((res)=>
+    {
+      console.log('已经连接');
+      console.log(res);
+      this.connectName = wifiObj.connectName;
+      wx.showToast({
+            title: 'wifi已经连接成功', //提示的内容,
             icon: 'success', //图标,
             duration: 2000, //延迟时间,
             mask: true, //显示透明蒙层，防止触摸穿透,
             success: res => {}
           });
-      });
-    }
+    })
   },
-  created () {
-
+  async onShow()
+  {
+  // 显示页面时获取当前连接的wifi
+  let data = await wifiObj.getConnectedWifi();
+  if(data.errMsg == "getConnectedWifi:ok")
+    {
+    this.connectName = data.wifi.SSID
+    }else
+    {
+      console.log('wifi error');
+      this.connectName = "";
+    };
   },
-  mounted() {
-    this.sendHttp();
-
-    // wx.startWifi({ success: res => {} });
-    // wx.getConnectedWifi({ success: res => {} }); //获取当前连接wifi
-  },
-
 }
 </script>
 
