@@ -1,11 +1,11 @@
 {
   "pages": [
     "pages/auth/main",
+    "pages/cmlogin/main",
     "pages/index/main",
     "pages/wifi/main",
     "pages/shilian/main",
-    "pages/ao/main",
-    "pages/cmlogin/main"
+    "pages/ao/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -1,6 +1,8 @@
 import store from '@/store/index'
-import { API_URL,appId,appSecret }from '../config/hostConfig'
-import { api_codeLogin } from'../api/index'
+import {
+  api_codeLogin,
+  api_phoneLogin
+} from '../api/index'
 // import Qc from 'qs'
 class auth {
   setting = {
@@ -16,52 +18,36 @@ class auth {
       title: '登入中'
     })
     let code = this.setting.wxCode;
-    // let data = await api_codeLogin({code});
-    // console.log(data);
-    wx.hideLoading();
+    let data = await api_codeLogin({
+      code
+    });
+    console.log(data);
+    // 第一次登入或者访客登入都需要调用 授权手机 登入
+
+    store.state.openId = data.openid;
+    store.state.userToken = data.token;
+    store.state.sessionKey = data.sessionKey;
     callback && callback();
-    // wx.request({
-    //   url: API_URL + "oaMini/loginByCode",
-    //   method: 'post',
-    //   // header: {
-    //   //   'version': store.state.version,
-    //   //   'access-token': json.data.access_token
-    //   // },
-    //   data: {
-    //     code,
-    //   },
-    //   success: res => {
-    //     console.log(res);
-    //     if (res.data.code == 1)
-    //      {
-    //       console.log(res);
-    //       // store.state.openId = res.data.data.openid;
-    //       // store.state.userToken = res.data.data.user_token;
-    //       // store.state.userAuth = res.data.data.user_type || 'guest';
-    //       // if (store.state.userAuth != 'guest') {}
-    //       callback && callback();
-    //     }
-    //   },
-    //   complete: res => {
-    //     wx.hideLoading();
-    //     // if (res.data.code != 1) {
-    //     //   setTimeout(() => {
-    //     //     wx.showToast({
-    //     //       title: res.data.msg,
-    //     //       icon: "none",
-    //     //       duration: 3000,
-    //     //       mask: false
-    //     //     })
-    //     //   }, 30)
-    //     // }
-    //   }
-    // });
-
   }
+  //手机登入
+  async getTokenByPhone(res) {
+    let data = await api_phoneLogin({
+      "openid":store.state.openId,
+      "iv": res.iv, //小程序调用授权获取手机号返回的iv
+      "session_key":store.state.sessionKey,
+      "encryptedData":res.encryptedData  //小程序调用授权获取手机号返回的encryptedData
+    })
+    store.state.userToken = data.token;
 
+    const url = '/pages/index/main';
+    wx.redirectTo({
+      url
+    })
+  }
   //存储用户信息到store
   saveUserInfo(res) {
     store.state.wxCode = this.setting.wxCode;
+    console.log(res);
     wx.setStorageSync('wxUserInfo', res.userInfo);
     wx.getLocation({
       type: 'wgs84',
@@ -70,15 +56,8 @@ class auth {
         store.state.longitude = res.longitude;
       }
     })
-    // const url = '/pages/index/main';
-    //     wx.redirectTo({
-    //       url
-    //     })
-    //这里实现登入漏极
-
     this.getToken(
       () => {
-        // wx.setStorageSync('openId', store.state.openId);
         // wx.setStorageSync('userAuth', store.state.userAuth);
         // wx.setStorageSync('loginToken', store.state.loginToken);
         // let userInfo = store.state.userInfo;
@@ -87,11 +66,27 @@ class auth {
         // newUserInfo.nickName = newUserInfo.nickName == undefined ? res.userInfo.nickName : newUserInfo.nickName;
         // store.state.userInfo = newUserInfo;
         // wx.setStorageSync('userInfo', newUserInfo);
+        wx.setStorageSync('open_id', store.state.openId)
+        wx.setStorageSync('login_Token', store.state.loginToken)
+        wx.setStorageSync('session_Key', store.state.sessionKey)
+        wx.hideLoading();
 
         const url = '/pages/index/main';
         wx.redirectTo({
           url
         })
+        //如果没有token 这里再调用手机登入
+        // if (!data.token) {
+        //   console.log('token 不存在')
+        //   //显示手机号授权按钮
+        //   store.state.wxAuthPhoneShow = true;
+        // } else {
+        //   // 已经登入过的员工之间push 界面
+        //   const url = '/pages/index/main';
+        //   wx.redirectTo({
+        //     url
+        //   })
+        // }
       }
     );
   }
@@ -100,8 +95,7 @@ class auth {
   getUserInfo() {
     wx.getSetting({
       success: (res) => {
-        if (res.authSetting['scope.userInfo'])
-        {
+        if (res.authSetting['scope.userInfo']) {
           wx.getUserInfo({
             success: (res) => {
               this.saveUserInfo(res);
@@ -115,6 +109,7 @@ class auth {
       }
     })
   }
+
 
   //验证用户微信版本
   checkWeixin() {

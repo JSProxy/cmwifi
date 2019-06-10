@@ -1,6 +1,6 @@
 <template>
     <div class="swiper">
-    <swiper :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration" @change="swiperChange">
+    <swiper :indicator-dots="indicatorDots" circular=true :autoplay="autoplay" :interval="interval" :duration="duration" @change="swiperChange">
         <block v-for="(item, index) in slideData" :key="index">
             <swiper-item>
                 <a :href="'/pages/detail/main?id='+item.val" v-if="item.type==2" class="aimg">
@@ -66,7 +66,8 @@ export default {
     height:188px;
     overflow:hidden;
     ._swiper-item{
-      // border-radius:6px;
+      box-sizing: border-box;
+      padding: 0rpx 20rpx;
       overflow:hidden;
     }
   }
@@ -90,6 +91,7 @@ export default {
     background:rgba(0,0,0, 0.5);
   }
   image, .aimg{
+    border-radius:10px;
     height: 100%;
     width: 100%;
   }

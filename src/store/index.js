@@ -13,10 +13,12 @@ const userInfo = {
 }
 const state = {
   userInfo,
-  userAuth: wx.getStorageSync('userAuth') || 'cmPerson',
+  userAuth: wx.getStorageSync('user_Auth') || 'cmPerson',
   openId: wx.getStorageSync('open_id') || '', //用户OPEN_ID
-  loginToken: wx.getStorageSync('loginToken') || "", //token
-  wxAuthShow: false //微信获取用户信息是否弹出权限按钮
+  loginToken: wx.getStorageSync('login_Token') || "", //token
+  sessionKey:  wx.getStorageSync('session_Key') || "", //token
+  wxAuthShow: false, //微信获取用户信息是否弹出权限按钮
+  wxAuthPhoneShow:false // 获取微信手机号授权按钮
 }
 const mutations = {
   setInfo(state, value) {

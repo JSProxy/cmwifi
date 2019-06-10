@@ -40,16 +40,16 @@ export default {
   methods: {
     async sendHttp()
     {
-      // let data = await api_wifiList({floor:11});
-      // this.wifiList =data;
-      // console.log(data);
-      this.wifiList = [
-      {
-        name:"cctv",
-        bssid:"DC:A9:04:97:72:C5",
-        password:"cctv123456",
-      }
-      ];
+      let data = await api_wifiList({floor:8});
+      this.wifiList =data;
+      console.log(data);
+      // this.wifiList = [
+      // {
+      //   name:"cctv",
+      //   bssid:"DC:A9:04:97:72:C5",
+      //   password:"cctv123456",
+      // }
+      // ];
     },
     connectWifi(item)
     {

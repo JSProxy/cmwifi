@@ -17,6 +17,16 @@
           </div>
         </div>
     </i-modal>
+     <i-modal  :visible="wxAuthPhone" :show-ok="showButton" :show-cancel="false">
+        <div class="auth_box">
+          <div>小程序需要获取您的手机号</div>
+           <div class="space-h-20"></div>
+            <div class="space-h-20"></div>
+          <div class="btn-box">
+             <button open-type="getPhoneNumber" plain='true' size="mini" class="dingdang-btn"  @getuserinfo="getPhoneNumber" @click="handleOk">允许</button>
+          </div>
+        </div>
+    </i-modal>
   </div>
 </template>
 
@@ -26,7 +36,8 @@ export default {
   data () {
     return {
       showButton: false, //不显示组件按钮
-      wxAuth: false      //微信授权按钮
+      wxAuth: false,      //微信授权按钮
+      wxAuthPhone:false //手机授权按钮
     }
   },
   computed: {
@@ -34,10 +45,15 @@ export default {
       wx.hideLoading();
       this.wxAuth = this.$store.state.wxAuthShow;
       return this.wxAuth;
+    },
+    WXAUTHPHONE(){
+      this.wxAuthPhone = this.$store.state.wxAuthPhoneShow;
+      return this.wxAuthPhone;
     }
   },
   methods: {
     bindGetUserInfo (e) {
+      console.log(e);
       if (e.mp.detail.rawData)
       {
         this.$auth.saveUserInfo(e.mp.detail);
@@ -49,14 +65,39 @@ export default {
         console.log('用户按了拒绝按钮')
       }
     },
+    getPhoneNumber(e){
+       if (e.mp.detail.rawData)
+      {
+        this.$auth.getTokenByPhone(e.mp.detail);
+        this.wxAuthPhone = false;
+      } else {
+        wx.navigateBack({
+          delta: -1
+        })
+        console.log('用户按了拒绝按钮')
+      }
+    },
     handleOk()
     {
       this.$store.state.wxAuthShow = false;
+      this.$store.state.wxAuthPhoneShow = false;
+      console.log('sss');
     }
   },
   mounted(){
-    this.$auth.login();
-  }
+    // 扫码进入 后进行跳转
+    // this.$auth.login();
+    // this.$root.$mp.appOptions // app onLaunch/onShow
+    // this.$root.$mp.query
+     let data = wx.getStorageSync('logininfo');
+    if(data){
+      wx.redirectTo({ url: '/pages/index/main' });
+    }else
+    {
+        // wx.redirectTo({ url:  '/pages/cmlogin/main' });
+         wx.redirectTo({ url: '/pages/index/main' });
+    }
+  },
 }
 </script>
 

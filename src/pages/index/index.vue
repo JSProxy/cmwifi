@@ -42,6 +42,7 @@
 
 <script>
 import Swiper from "@/components/swiper";
+import { api_bannerlist } from'../../api/index'
 export default {
   data() {
     return {
@@ -83,7 +84,7 @@ export default {
   },
   methods: {
    cmlogin(){
-      wx.navigateTo({ url: "/pages/cmlogin/main" });
+      wx.navigateTo({ url: "/pages/cmlogin/main?phoneLogin=false"});
    },
     wifiClick() {
       wx.navigateTo({ url: "/pages/wifi/main" });
@@ -99,7 +100,11 @@ export default {
   created() {
     // let app = getApp()
   },
-  mounted() {}
+  async mounted() {
+    let data = await  api_bannerlist();
+    this.slideData = data;
+    console.log(data);
+  }
 };
 </script>
 
