@@ -6,18 +6,18 @@
 let Fly = require("flyio/dist/npm/wx");
 let flyio = new Fly;
 //使用表单的时候用qs转化
-// let qs = require("qs");
+let qs = require("qs");
 import { catchInfo, warnInfo } from "./infoCatch.js"; //报错日志
 // flyio.config.timeout = 5000;
 // flyio.config.parseJson = false;
 flyio.interceptors.request.use(
   request => {
     request.headers = {
-      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",//表单
-      // "Content-Type": "application/json; charset=UTF-8",//json
+      // "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",//表单
+      "Content-Type": "application/json; charset=UTF-8",//json
       "Accept": "application/json"
     };
-    // request.body = qs.stringify(method.Fun_md5(request.body));
+    // request.body = qs.stringify(request.body);
     return request;
   },
   err => {

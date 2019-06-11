@@ -13,6 +13,7 @@ const userInfo = {
 }
 const state = {
   userInfo,
+  floor: wx.getStorageSync('floor') || '0',
   userAuth: wx.getStorageSync('user_Auth') || 'cmPerson',
   openId: wx.getStorageSync('open_id') || '', //用户OPEN_ID
   loginToken: wx.getStorageSync('login_Token') || "", //token
@@ -23,6 +24,12 @@ const state = {
 const mutations = {
   setInfo(state, value) {
     state.info = value
+  },
+  setFloor(state, value) {
+    state.floor = value
+  },
+  setToken(state, value) {
+    state.loginToken = value
   }
 }
 const actions = {

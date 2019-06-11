@@ -19,7 +19,7 @@
           lazy-load="false">
         </image>
       </div>
-      <div v-if="userAuth == 'cmPerson'" @click="aoClick">
+      <div v-if="userAuth" @click="aoClick">
         <image
           src="/static/images/cmoa@2x.png"
           mode="aspectFill"
@@ -27,7 +27,7 @@
         </image>
       </div>
     </div>
-    <div v-if="userAuth == 'cmPerson'" class="cm-enter-box" @click="cmlogin">
+    <div v-if="!userAuth" class="cm-enter-box" @click="cmlogin">
         <div>
           员工入口
         </div>
@@ -50,7 +50,7 @@ export default {
         nickName: "mpvue",
         avatarUrl: "http://mpvue.com/assets/logo.png"
       },
-      userAuth: "", //用户类型权限
+      userAuth: false, //用户类型权限
       slideData: [
         {
           url:
@@ -75,7 +75,13 @@ export default {
   },
   computed: {
     USERAUTH() {
-      this.userAuth = this.$store.state.userAuth;
+      if(this.$store.state.loginToken)
+      {
+        console.log(this.$store.state.loginToken);
+        this.userAuth = true;
+      }else{
+         this.userAuth = false;
+      }
       return this.userAuth;
     }
   },
@@ -89,8 +95,24 @@ export default {
     wifiClick() {
       wx.navigateTo({ url: "/pages/wifi/main" });
     },
-    shilianClick() {
-      wx.navigateTo({ url: "/pages/shilian/main" });
+    shilianClick()
+    {
+      wx.navigateToMiniProgram({
+          appId: 'wx3a2857a479b2f501',
+          path: 'pages/index/index',
+          extraData: {
+            foo: 'bar'
+          },
+          envVersion: 'develop', //release
+          success(res) {
+            console.log('success')
+            console.log(res);
+          },
+          fail(res){
+            console.log('error')
+            console.log(res);
+          }
+    })
     },
     aoClick() {
       wx.navigateTo({ url: "/pages/ao/main" });

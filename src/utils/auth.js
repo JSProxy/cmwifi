@@ -1,7 +1,7 @@
 import store from '@/store/index'
 import {
-  api_codeLogin,
-  api_phoneLogin
+  api_wxcodeLogin,
+  api_wxphoneLogin
 } from '../api/index'
 // import Qc from 'qs'
 class auth {
@@ -18,27 +18,25 @@ class auth {
       title: '登入中'
     })
     let code = this.setting.wxCode;
-    let data = await api_codeLogin({
+    let data = await api_wxcodeLogin({
       code
     });
     console.log(data);
     // 第一次登入或者访客登入都需要调用 授权手机 登入
-
     store.state.openId = data.openid;
-    store.state.userToken = data.token;
+    store.state.loginToken = data.token;
     store.state.sessionKey = data.sessionKey;
     callback && callback();
   }
-  //手机登入
+  //手机登入 不做了
   async getTokenByPhone(res) {
-    let data = await api_phoneLogin({
-      "openid":store.state.openId,
+    let data = await api_wxphoneLogin({
+      "openid": store.state.openId,
       "iv": res.iv, //小程序调用授权获取手机号返回的iv
-      "session_key":store.state.sessionKey,
-      "encryptedData":res.encryptedData  //小程序调用授权获取手机号返回的encryptedData
+      "session_key": store.state.sessionKey,
+      "encryptedData": res.encryptedData //小程序调用授权获取手机号返回的encryptedData
     })
     store.state.userToken = data.token;
-
     const url = '/pages/index/main';
     wx.redirectTo({
       url
@@ -70,11 +68,20 @@ class auth {
         wx.setStorageSync('login_Token', store.state.loginToken)
         wx.setStorageSync('session_Key', store.state.sessionKey)
         wx.hideLoading();
-
-        const url = '/pages/index/main';
-        wx.redirectTo({
-          url
-        })
+        // code 成功登入 说明员工已经登入过了
+        if (store.state.loginToken)
+        {
+          const url = '/pages/index/main';
+          wx.redirectTo({
+            url
+          })
+        } else {
+          // 无token
+          const url = '/pages/cmlogin/main';
+          wx.redirectTo({
+            url
+          })
+        }
         //如果没有token 这里再调用手机登入
         // if (!data.token) {
         //   console.log('token 不存在')

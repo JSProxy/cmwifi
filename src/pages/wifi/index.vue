@@ -33,14 +33,16 @@ export default {
     }
   },
   computed: {
-
   },
   components: {
   },
   methods: {
     async sendHttp()
     {
-      let data = await api_wifiList({floor:8});
+      this.floor = this.$store.state.floor;
+      // console.log(this.$store.state.floor)
+      console.log(this.floor)
+      let data = await api_wifiList({floor:this.floor});
       this.wifiList =data;
       console.log(data);
       // this.wifiList = [

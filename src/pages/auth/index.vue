@@ -85,18 +85,25 @@ export default {
     }
   },
   mounted(){
-    // 扫码进入 后进行跳转
-    // this.$auth.login();
     // this.$root.$mp.appOptions // app onLaunch/onShow
     // this.$root.$mp.query
-     let data = wx.getStorageSync('logininfo');
-    if(data){
-      wx.redirectTo({ url: '/pages/index/main' });
-    }else
-    {
-        // wx.redirectTo({ url:  '/pages/cmlogin/main' });
-         wx.redirectTo({ url: '/pages/index/main' });
-    }
+    // console.log( this.$root.$mp.appOptions)
+    // console.log( this.$root.$mp.query)
+    // this.$store.state.floor = this.$root.$mp.query.floor;
+    // console.log(this.$store.state.floor);
+    // console.log(this.$root.$mp.appOptions)
+     wx.setStorageSync('floor',this.$root.$mp.appOptions.query.floor);
+     this.$store.commit('setFloor',this.$root.$mp.appOptions.query.floor)
+    // 扫码进入 后进行跳转
+    this.$auth.login();
+    //  let data = wx.getStorageSync('logininfo');
+    // if(data){
+    //   wx.redirectTo({ url: '/pages/index/main' });
+    // }else
+    // {
+    //     wx.redirectTo({ url:  '/pages/cmlogin/main' });
+    //     //  wx.redirectTo({ url: '/pages/index/main' });
+    // }
   },
 }
 </script>
